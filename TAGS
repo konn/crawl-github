@@ -2,36 +2,44 @@
 ./Setup.hs,15
 main main1,2
 
-./src/Main.hs,1031
-module Main Main2,3
-newtype AccTok AccTok23,24
-newtype AccTok  = AccTok AccTok23,24
-newtype AccTok  = AccTok { accessToken accessToken23,24
-instance instance26,27
-main main30,31
-main main31,32
-maybeResult maybeResult43,44
-maybeResult maybeResult44,45
-data Item Item47,48
-data Item = Item Item47,48
-data Item = Item { itemPath itemPath47,48
-                 , itemRepository itemRepository48,49
-                 , itemUrl itemUrl49,50
-rawUrl rawUrl53,54
-rawUrl rawUrl54,55
-newtype Repository Repository60,61
-newtype Repository = Repo Repo60,61
-newtype Repository = Repo { repoHtmlUrl repoHtmlUrl60,61
-newtype Items Items63,64
-newtype Items  = Items Items63,64
-newtype Items  = Items { items items63,64
-aeOpts aeOpts66,67
-aeOpts aeOpts67,68
-crawl crawl78,79
-crawl crawl80,81
-calcWait calcWait97,98
-calcWait calcWait98,99
-extractCustomGeneric extractCustomGeneric111,112
-extractCustomGeneric extractCustomGeneric112,113
-nameLast nameLast120,121
-nameLast nameLast121,122
+./src/Main.hs,1299
+module Main Main3,4
+newtype AccTok AccTok28,29
+newtype AccTok  = AccTok AccTok28,29
+newtype AccTok  = AccTok { accessToken accessToken28,29
+instance instance31,32
+main main35,36
+main main36,37
+maybeParseModule maybeParseModule45,46
+maybeParseModule maybeParseModule46,47
+getCustomGeneric getCustomGeneric52,53
+getCustomGeneric getCustomGeneric53,54
+get' get'58,59
+get' get'59,60
+eitherMaybe eitherMaybe63,64
+eitherMaybe eitherMaybe64,65
+maybeResult maybeResult69,70
+maybeResult maybeResult70,71
+data Item Item73,74
+data Item = Item Item73,74
+data Item = Item { itemPath itemPath73,74
+                 , itemRepository itemRepository74,75
+                 , itemUrl itemUrl75,76
+rawUrl rawUrl79,80
+rawUrl rawUrl80,81
+newtype Repository Repository86,87
+newtype Repository = Repo Repo86,87
+newtype Repository = Repo { repoHtmlUrl repoHtmlUrl86,87
+newtype Items Items89,90
+newtype Items  = Items Items89,90
+newtype Items  = Items { items items89,90
+aeOpts aeOpts92,93
+aeOpts aeOpts93,94
+crawl crawl104,105
+crawl crawl106,107
+calcWait calcWait123,124
+calcWait calcWait124,125
+extractCustomGeneric extractCustomGeneric137,138
+extractCustomGeneric extractCustomGeneric138,139
+nameLast nameLast146,147
+nameLast nameLast147,148

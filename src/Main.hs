@@ -1,14 +1,18 @@
 {-# LANGUAGE DeriveGeneric, OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE TypeApplications                                  #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 module Main where
+import           Control.Arrow          ((>>>))
 import           Control.Concurrent
 import           Control.Exception
 import           Control.Lens
 import           Control.Monad
 import           Control.Monad.IO.Class
+import           Control.Monad.Loops
 import           Data.Aeson
 import           Data.ByteString        (ByteString)
 import qualified Data.ByteString.Char8  as BS
+import qualified Data.ByteString.Lazy   as LBS
 import           Data.ByteString.Lens
 import           Data.Maybe             (fromJust)
 import qualified Data.Text.Encoding     as T
@@ -18,6 +22,7 @@ import           Network.HTTP.Client    (HttpException (..),
                                          HttpExceptionContent (..))
 import           Network.HTTP.Types
 import           Network.Wreq
+import           Streaming.Concurrent
 import qualified Streaming.Prelude      as S
 import           System.Clock
 
@@ -34,12 +39,33 @@ main = do
   let github = oauth2Token tok
       opts = defaults & auth ?~ github
                       & param "q" .~ ["instance Generic extension:hs extension:lhs"]
-  i <- crawl opts "https://api.github.com/search/code"
-    & S.mapM  get
-    & S.mapMaybe (maybeResult . parseModuleWithMode defaultParseMode { extensions = glasgowExts } . view (responseBody . unpackedChars))
-    & S.map (length . extractCustomGeneric)
-    & S.fold_ (+) 0 id
+  i <- withStreamMapM 5 maybeParseModule (crawl opts "https://api.github.com/search/code") $
+       S.catMaybes >>> S.fold_ (+) 0 id
   print i
+
+maybeParseModule :: String -> IO (Maybe Int)
+maybeParseModule url = do
+  rsp <- get' url
+  putStrLn $ "Processed: " ++ url
+  let src = rsp ^. unpackedChars
+  return $ getCustomGeneric src
+
+getCustomGeneric :: String -> Maybe Int
+getCustomGeneric src = do
+  i <- maybeResult $ parseModuleWithMode defaultParseMode { extensions = glasgowExts } src
+  return $ length $ extractCustomGeneric i
+
+
+get' :: String -> IO LBS.ByteString
+get' =
+  untilJust . fmap eitherMaybe . try @HttpException . \url ->
+    do putStrLn $ "accessing: " ++ url; threadDelay (10^6); view responseBody <$> get url
+
+eitherMaybe :: Either HttpException LBS.ByteString -> Maybe LBS.ByteString
+eitherMaybe (Right a) = Just a
+eitherMaybe (Left (HttpExceptionRequest _ (StatusCodeException rsp _)))
+  | rsp ^. responseStatus == status404 = Just ""
+eitherMaybe _ = Nothing
 
 maybeResult :: ParseResult a -> Maybe a
 maybeResult (ParseOk a) = Just a

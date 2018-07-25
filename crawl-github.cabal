@@ -26,6 +26,7 @@ executable crawl-github
                      , containers
                      , aeson
                      , streaming
+                     , streaming-concurrency
                      , http-types
                      , clock
                      , http-client
