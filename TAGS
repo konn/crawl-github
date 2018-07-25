@@ -2,44 +2,44 @@
 ./Setup.hs,15
 main main1,2
 
-./src/Main.hs,1299
+./src/Main.hs,1309
 module Main Main3,4
-newtype AccTok AccTok28,29
-newtype AccTok  = AccTok AccTok28,29
-newtype AccTok  = AccTok { accessToken accessToken28,29
-instance instance31,32
-main main35,36
-main main36,37
-maybeParseModule maybeParseModule45,46
-maybeParseModule maybeParseModule46,47
-getCustomGeneric getCustomGeneric52,53
-getCustomGeneric getCustomGeneric53,54
-get' get'58,59
-get' get'59,60
-eitherMaybe eitherMaybe63,64
-eitherMaybe eitherMaybe64,65
-maybeResult maybeResult69,70
-maybeResult maybeResult70,71
-data Item Item73,74
-data Item = Item Item73,74
-data Item = Item { itemPath itemPath73,74
-                 , itemRepository itemRepository74,75
-                 , itemUrl itemUrl75,76
-rawUrl rawUrl79,80
-rawUrl rawUrl80,81
-newtype Repository Repository86,87
-newtype Repository = Repo Repo86,87
-newtype Repository = Repo { repoHtmlUrl repoHtmlUrl86,87
-newtype Items Items89,90
-newtype Items  = Items Items89,90
-newtype Items  = Items { items items89,90
-aeOpts aeOpts92,93
-aeOpts aeOpts93,94
-crawl crawl104,105
-crawl crawl106,107
-calcWait calcWait123,124
-calcWait calcWait124,125
-extractCustomGeneric extractCustomGeneric137,138
-extractCustomGeneric extractCustomGeneric138,139
-nameLast nameLast146,147
-nameLast nameLast147,148
+newtype AccTok AccTok30,31
+newtype AccTok  = AccTok AccTok30,31
+newtype AccTok  = AccTok { accessToken accessToken30,31
+instance instance33,34
+main main37,38
+main main38,39
+maybeParseModule maybeParseModule56,57
+maybeParseModule maybeParseModule57,58
+getCustomGeneric getCustomGeneric63,64
+getCustomGeneric getCustomGeneric64,65
+get' get'69,70
+get' get'70,71
+eitherMaybe eitherMaybe74,75
+eitherMaybe eitherMaybe75,76
+maybeResult maybeResult80,81
+maybeResult maybeResult81,82
+data Item Item84,85
+data Item = Item Item84,85
+data Item = Item { itemPath itemPath84,85
+                 , itemRepository itemRepository85,86
+                 , itemUrl itemUrl86,87
+rawUrl rawUrl90,91
+rawUrl rawUrl91,92
+newtype Repository Repository97,98
+newtype Repository = Repo Repo97,98
+newtype Repository = Repo { repoHtmlUrl repoHtmlUrl97,98
+newtype Items Items100,101
+newtype Items  = Items Items100,101
+newtype Items  = Items { items items100,101
+aeOpts aeOpts103,104
+aeOpts aeOpts104,105
+crawl crawl115,116
+crawl crawl117,118
+calcWait calcWait134,135
+calcWait calcWait135,136
+extractCustomGeneric extractCustomGeneric147,148
+extractCustomGeneric extractCustomGeneric148,149
+nameLast nameLast156,157
+nameLast nameLast157,158

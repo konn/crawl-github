@@ -15,6 +15,7 @@ import qualified Data.ByteString.Char8  as BS
 import qualified Data.ByteString.Lazy   as LBS
 import           Data.ByteString.Lens
 import           Data.Maybe             (fromJust)
+import           Data.Monoid
 import qualified Data.Text.Encoding     as T
 import           GHC.Generics           (Generic)
 import           Language.Haskell.Exts
@@ -25,6 +26,7 @@ import           Network.Wreq
 import           Streaming.Concurrent
 import qualified Streaming.Prelude      as S
 import           System.Clock
+import           System.IO
 
 newtype AccTok  = AccTok { accessToken :: ByteString }
   deriving (Read, Show, Eq, Ord)
@@ -40,26 +42,35 @@ main = do
       opts = defaults & auth ?~ github
                       & param "q" .~ ["instance Generic extension:hs extension:lhs"]
   i <- withStreamMapM 5 maybeParseModule (crawl opts "https://api.github.com/search/code") $
-       S.catMaybes >>> S.fold_ (+) 0 id
+       S.catMaybes >>> S.toList_
   print i
+  putStrLn $ unwords [ "There are"
+                     , show $ getSum $ foldMap (Sum . length . snd) i
+                     , "custom instances."
+                     ]
+  putStrLn $ unwords [ show $ length $ filter (not . null . snd) i
+                     , "out of"
+                     , show $ length i
+                     , "modules have custom instances."
+                     ]
 
-maybeParseModule :: String -> IO (Maybe Int)
+maybeParseModule :: String -> IO (Maybe (String, [Decl SrcSpanInfo]))
 maybeParseModule url = do
   rsp <- get' url
-  putStrLn $ "Processed: " ++ url
+  hPutStrLn stderr $ "Processed: " ++ url
   let src = rsp ^. unpackedChars
   return $ getCustomGeneric src
 
-getCustomGeneric :: String -> Maybe Int
+getCustomGeneric :: String -> Maybe (String, [Decl SrcSpanInfo])
 getCustomGeneric src = do
   i <- maybeResult $ parseModuleWithMode defaultParseMode { extensions = glasgowExts } src
-  return $ length $ extractCustomGeneric i
+  return (src, extractCustomGeneric i)
 
 
 get' :: String -> IO LBS.ByteString
 get' =
   untilJust . fmap eitherMaybe . try @HttpException . \url ->
-    do putStrLn $ "accessing: " ++ url; threadDelay (10^6); view responseBody <$> get url
+    do hPutStrLn stderr $ "accessing: " ++ url; threadDelay (10^6); view responseBody <$> get url
 
 eitherMaybe :: Either HttpException LBS.ByteString -> Maybe LBS.ByteString
 eitherMaybe (Right a) = Just a
@@ -132,7 +143,6 @@ calcWait rsp = do
     Nothing -> do
       let durSecs = reset - now
           wait = ceiling (fromInteger remain / fromInteger durSecs :: Double)
-      print (remain, reset, now, durSecs)
       return $ max 1 $ if durSecs > 0 then wait else 0
 
 extractCustomGeneric :: Module l -> [Decl l]
